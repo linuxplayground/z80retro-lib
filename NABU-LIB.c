@@ -520,6 +520,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
         fgColor = 0;
         _vdpCursorMaxX = 31;
         _vdpCursorMaxXFull = 32;
+        _vdpTextBufferSize = 768;
 
         break;
 
@@ -544,6 +545,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
         _vdpCursorMaxX = 39;
         _vdpCursorMaxXFull = 40;
+        _vdpTextBufferSize = 960;
 
         break;
 
@@ -560,6 +562,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
         fgColor = 0;
         _vdpCursorMaxX = 31;
         _vdpCursorMaxXFull = 32;
+        _vdpTextBufferSize = 768;
 
         break;
     }
@@ -1135,20 +1138,23 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     vdp_setWriteAddress(_vdpPatternNameTableAddr);
 
     __asm
-        ld hl, __vdp_textBuffer;
-        ld b, 0;
-        ld c, 0xA0;
-        otir;
-        otir;
-        otir;
-    __endasm;
+      ld hl, __vdp_textBuffer;
+      ld de, (__vdpTextBufferSize); 
 
-    if (_vdpCursorMaxXFull == 40)
-      __asm
-        ld hl, __vdp_textBuffer + 768;
-        ld b, 192;
-        ld c, 0xA0;
-        otir;
+      vdp_refreshViewPortLoop3:
+
+        ld a, (hl);
+        out (0x80), a;
+
+        inc hl;
+        dec de;
+
+        ld A, D;                 
+        or E;                   
+        jp nz, vdp_refreshViewPortLoop3;
+
+      pop de;
+      pop hl;
       __endasm;
   }
 

@@ -1521,6 +1521,9 @@ inline uint8_t ayRead(uint8_t reg);
   // **************************************************************************
   void vdp_writeUInt32ToBinary(uint32_t v);
 
+  //Z80 Retro function to slow things down a bit
+  void vdp_put(uint8_t c);
+
 #endif
 
 #include "NABU-LIB.c"

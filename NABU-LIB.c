@@ -592,7 +592,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     vdp_setWriteAddress(0x00);
 
     for (uint16_t i = 0; i < 0x3FFF; i++)
-      IO_VDPDATA = 0;  
+      vdp_put(0);
   }
 
   void vdp_initMSXMode(uint8_t bgColor) {
@@ -639,7 +639,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
     do {
 
-      IO_VDPDATA = cr;
+      vdp_put(cr);
 
       *start = 0x20;
 
@@ -654,7 +654,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     uint8_t *end = start + (_vdpCursorMaxXFull * 24);
 
     do {
-      IO_VDPDATA = c;
+      vdp_put(c);
       *start = c;
       start++;
     } while (start != end);
@@ -671,8 +671,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
     do {
       
-      IO_VDPDATA = 0x20;
-
+      vdp_put(0x20);
       *start = 0x20;
 
       start++;
@@ -688,8 +687,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
     do {
 
-      IO_VDPDATA = *start;
-
+      vdp_put(*start);
       start++;
     } while (start != end);
   }
@@ -703,16 +701,14 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
     do {
 
-      IO_VDPDATA = *start;
-
+      vdp_put(*start);
       start++;
     } while (start != end);
 
     start = font;
     do {
 
-      IO_VDPDATA = *start ^ 0xff;
-
+      vdp_put(*start ^ 0xff);
       start++;
     } while (start != end);
   }
@@ -724,7 +720,8 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     vdp_setWriteAddress(_vdpPatternNameTableAddr + name_offset);
     _vdp_textBuffer[name_offset] = patternId;
     
-    IO_VDPDATA = patternId;
+    // IO_VDPDATA = patternId;
+    vdp_put(patternId);
   }
 
   void vdp_loadPatternTable(uint8_t *patternTable, uint16_t len) {
@@ -737,7 +734,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     vdp_setWriteAddress(_vdpPatternGeneratorTableAddr);
     do {
 
-      IO_VDPDATA = *start;
+      vdp_put(*start);
 
       start++;
     } while (start != end);
@@ -748,8 +745,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
       start = patternTable;
       do {
 
-        IO_VDPDATA = *start;
-
+        vdp_put(*start);
         start++;
       } while (start != end);
 
@@ -757,8 +753,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
       start = patternTable;
       do {
 
-        IO_VDPDATA = *start;
-
+        vdp_put(*start);
         start++;
       } while (start != end);
     }
@@ -773,8 +768,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     vdp_setWriteAddress(_vdpColorTableAddr);
     do {
 
-      IO_VDPDATA = *start;
-
+      vdp_put(*start);
       start++;
     } while (start != end);
 
@@ -784,8 +778,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
       start = colorTable;
       do {
 
-        IO_VDPDATA = *start;
-
+        vdp_put(*start);
         start++;
       } while (start != end);
 
@@ -793,8 +786,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
       start = colorTable;
       do {
 
-        IO_VDPDATA = *start;
-
+        vdp_put(*start);
         start++;
       } while (start != end);
     }
@@ -808,17 +800,17 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
     vdp_setWriteAddress(_vdpColorTableAddr + pt);
     for (uint8_t i = 0; i < 8; i++)
-      IO_VDPDATA = c;
+      vdp_put(c);
 
     if (_vdpSplitThirds) {
 
       vdp_setWriteAddress(_vdpColorTableAddr + 2048  + pt);
       for (uint8_t i = 0; i < 8; i++)
-        IO_VDPDATA = c;
+        vdp_put(c);
 
       vdp_setWriteAddress(_vdpColorTableAddr + 4096 + pt);
       for (uint8_t i = 0; i < 8; i++)
-        IO_VDPDATA = c;
+        vdp_put(c);
     }
   }
 
@@ -843,10 +835,10 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     }
 
     vdp_setWriteAddress(_vdpPatternGeneratorTableAddr + offset);
-    IO_VDPDATA = pixel;
+    vdp_put(pixel);
 
     vdp_setWriteAddress(_vdpColorTableAddr + offset);
-    IO_VDPDATA = color;
+    vdp_put(color);
   }
 
   void vdp_plotColor(uint8_t x, uint8_t y, uint8_t color) {
@@ -861,9 +853,9 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
       vdp_setWriteAddress(addr);
 
       if (x & 1) // Odd columns
-        IO_VDPDATA = (dot & 0xF0) + (color & 0x0f);
+        vdp_put((dot & 0xF0) + (color & 0x0F));
       else
-        IO_VDPDATA = (dot & 0x0F) + (color << 4);
+        vdp_put( (dot & 0x0F) + (color <<4));
     } else if (_vdpMode == VDP_MODE_G2) {
 
       // Draw bitmap
@@ -884,10 +876,10 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
       }
 
       vdp_setWriteAddress(_vdpPatternGeneratorTableAddr + offset);
-      IO_VDPDATA = 0xF0;
+      vdp_put(0xF0);
 
       vdp_setWriteAddress(_vdpColorTableAddr + offset);
-      IO_VDPDATA = color_;
+      vdp_put(color_);
     }
   }
 
@@ -896,10 +888,10 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     uint16_t addr = _vdpSpriteAttributeTableAddr + 4 * id;
 
     vdp_setWriteAddress(addr);
-    IO_VDPDATA = 192;        // y
-    IO_VDPDATA = 0;          // x
-    IO_VDPDATA = 0;          // pattern name #0 (should always be empty so no false collisions)
-    IO_VDPDATA = 0b10000000; // early clock to hide behind border
+    vdp_put(192);        // y
+    vdp_put(0);          // x
+    vdp_put(0);          // pattern name #0 (should always be empty so no false collisions)
+    vdp_put(0b10000000); // early clock to hide behind border
   }
 
   void vdp_loadSpritePatternNameTable(uint16_t numSprites, uint8_t *sprite) {
@@ -914,7 +906,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
       uint16_t end = numSprites * 32;
 
       for (uint16_t i = 0; i < end; i++) 
-        IO_VDPDATA = sprite[i];
+        vdp_put(sprite[i]);
     } else {
 
       vdp_setWriteAddress(_vdpSpriteGeneratorTableAddr);
@@ -922,7 +914,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
       uint16_t end = numSprites * 8;
       
       for (uint16_t i = 0; i < end; i++) 
-        IO_VDPDATA = sprite[i];
+        vdp_put(sprite[i]);
     }
   }
 
@@ -932,17 +924,17 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
     vdp_setWriteAddress(addr);
     
-    IO_VDPDATA = y; // y
+    vdp_put(y); // y
     
-    IO_VDPDATA = x; // x
+    vdp_put(x); // x
 
     if (_vdpSpriteSizeSelected)
-      IO_VDPDATA = spritePatternNameId * 4; // 16x16 sprite location (name). big sprites take 4 8x8 blocks (datasheet 2-34)
+      vdp_put(spritePatternNameId * 4); // 16x16 sprite location (name). big sprites take 4 8x8 blocks (datasheet 2-34)
     else
-      IO_VDPDATA = spritePatternNameId;     // 8x8 sprite location (name
+      vdp_put(spritePatternNameId);     // 8x8 sprite location (name
 
     // Set bit 7 to hide the sprite since we're not using it yet
-    IO_VDPDATA = color & 0x0f;
+    vdp_put(color & 0x0f);
 
     return id;
   }
@@ -953,7 +945,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
     vdp_setWriteAddress(addr + 3);
 
-    IO_VDPDATA = color & 0x0f;
+    vdp_put(color & 0x0f);
   }
 
   void vdp_setSpritePosition(uint8_t id, uint8_t x, uint8_t y) {
@@ -961,8 +953,8 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     uint16_t addr = _vdpSpriteAttributeTableAddr + 4 * id;
 
     vdp_setWriteAddress(addr);
-    IO_VDPDATA = y;
-    IO_VDPDATA = x;
+    vdp_put(y);
+    vdp_put(x);
   }
 
   void vdp_setSpritePositionAndColor(uint8_t id, uint8_t x, uint8_t y, uint8_t color) {
@@ -970,10 +962,10 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     uint16_t addr = _vdpSpriteAttributeTableAddr + 4 * id;
 
     vdp_setWriteAddress(addr);
-    IO_VDPDATA = y;
-    IO_VDPDATA = x;
-    IO_VDPDATA = id;
-    IO_VDPDATA = color & 0x0f;
+    vdp_put(y);
+    vdp_put(x);
+    vdp_put(id);
+    vdp_put(color & 0x0f);
   }
 
   void vdp_getSpritePosition(uint8_t id, uint8_t *xpos, uint8_t *ypos) {
@@ -1089,7 +1081,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
     vdp_setWriteAddress(_vdpPatternNameTableAddr + name_offset);
 
-    IO_VDPDATA = chr;
+    vdp_put(chr);
 
     _vdp_textBuffer[name_offset] = chr;
 
@@ -1111,7 +1103,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
       
     vdp_setWriteAddress(_vdpPatternNameTableAddr + name_offset);
 
-    IO_VDPDATA = c;
+    vdp_put(c);
   }
 
   uint8_t vdp_getCharAtLocationVRAM(uint8_t x, uint8_t y) {
@@ -1145,6 +1137,11 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
         ld a, (hl);
         out (0x80), a;
+        
+        push hl;
+        pop hl;
+        push hl;
+        pop hl;
 
         inc hl;
         dec de;
@@ -1153,8 +1150,6 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
         or E;                   
         jp nz, vdp_refreshViewPortLoop3;
 
-      pop de;
-      pop hl;
       __endasm;
   }
 
@@ -1170,7 +1165,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
       *to = *from;
 
-      IO_VDPDATA = *to;
+      vdp_put(*to);
 
       to++;
       from++;
@@ -1179,7 +1174,8 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     do {
 
       *to = 0x20;
-      IO_VDPDATA = 0x20;
+      vdp_put(0x20);
+      
 
       to++;
     } while (to != end);
@@ -1212,7 +1208,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
     do {
 
-      IO_VDPDATA = *v;
+      vdp_put(*v);
 
       v++;
     } while (v != e);
@@ -1261,5 +1257,17 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     str[32] = 0x00;
 
     vdp_print(str);
+  }
+
+  void vdp_put(uint8_t c) {
+    IO_VDPDATA = c;
+    __asm
+      push hl;
+      pop  hl;
+      push hl;
+      pop  hl;
+      push hl;
+      pop  hl;
+    __endasm;
   }
 #endif

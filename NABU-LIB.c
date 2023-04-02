@@ -1267,7 +1267,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     IO_VDPDATA = c;
     __asm
       push    bc                      ; 11  | 11
-      ld      b, 1                    ; 1 iteration
+      ld      b, 2                    ; 2 iteration
     TmsRamOutDelay:
       djnz    TmsRamOutDelay          ; 8   | 7  plus (13 | 9) * (iterations-1)
       pop     bc                      ; 10  | 9

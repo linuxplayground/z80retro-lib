@@ -1259,15 +1259,18 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     vdp_print(str);
   }
 
+  //https://github.com/jblang/TMS9918A/blob/111ce0ba7ff446ac3b2fbaa81d41a741074e431d/examples/tms.asm#L213
+  //Limits all ram out operations to at least 8uS.  We could be more efficient on the VDP Blank,
+  //but if the code overshoots the vsync timings, we would end up in trouble.  This approach while a bit
+  //slower, avoids that risk altogether.
   void vdp_put(uint8_t c) {
     IO_VDPDATA = c;
     __asm
-      push hl;
-      pop  hl;
-      push hl;
-      pop  hl;
-      push hl;
-      pop  hl;
+      push    bc                      ; 11  | 11
+      ld      b, 1                    ; 1 iteration
+    TmsRamOutDelay:
+      djnz    TmsRamOutDelay          ; 8   | 7  plus (13 | 9) * (iterations-1)
+      pop     bc                      ; 10  | 9
     __endasm;
   }
 #endif

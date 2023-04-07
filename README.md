@@ -67,3 +67,68 @@ The NABU Library relies on the NABU interrupt handler for the keyboard and the j
 
 The Retro has the joysticks IO Address mapped at A9 for Joystick 0 and A8 for Joystick 1.  The library also inverts the data read from these addresses to account for the hardware differences.
 
+## IO Ports
+
+The following table lists out the IO Ports for the Z80 Retro - Taken from : 
+
+* https://github.com/Z80-Retro/2063-Z80-cpm/blob/main/lib/io.asm
+* https://github.com/Z80-Retro/example-filesystem/blob/main/progs/tms9118/sprites.asm
+
+
+| Name          | Port |Comment
+| ------------- | ---- |-----------------------------------------------
+| **GENERAL**   |      |
+| gpio_in       | 0x00 | GP input port
+| gpio_out      | 0x10 | GP output port
+| prn_dat       |	0x20 | printer data out
+| **SIO**       |      |
+| sio_ad        |	0x30 | SIO port A, data
+| sio_bd        |	0x31 | SIO port B, data
+| sio_ac        |	0x32 | SIO port A, control
+| sio_bc        |	0x33 | SIO port B, control
+| **CTC**       |      |
+| ctc_0         |	0x40 | CTC port 0
+| ctc_1         |	0x41 | CTC port 1
+| ctc_2         |	0x42 | CTC port 2
+| ctc_3         |	0x43 | CTC port 3
+| **FLASH**     |      |
+| flash_disable | 0x70 | dummy-read from this port to disable the FLASH
+| **VDP**       |      |
+| vdp_vram      | 0x80 | VDP port for accessing the VRAM
+| vdp_reg       | 0x81 | VDP port for accessing the registers
+| joy0          | 0xa8 | I/O port for joystick 0 [J3 connector]
+| joy1          | 0xa9 | I/O port for joystick 1 [J4 connector]
+
+## BIT Assignments
+
+The various IO devices have these associated bit settings.
+
+| Device / Action  | Mask | Comment
+| ---------------- | ---- | -------
+| **JOYSTICK**     |      |
+| joy_left         | 0x04 | and-mask for left
+| joy_right        | 0x20 | and-mask for right
+| joy_up           | 0x80 | and-mask for up
+| joy_down         | 0x40 | and-mask for down
+| joy_btn          | 0x01 | and-mask for button
+| **GP Output**    |      |
+| gpio_out_sd_mosi | 0x01 | 0b00000001
+| gpio_out_sd_clk  | 0x02 | 0b00000010
+| gpio_out_sd_ssel | 0x04 | 0b00000100
+| gpio_out_prn_stb | 0x08 | 0b00001000
+| gpio_out_a15     | 0x10 | 0b00010000
+| gpio_out_a16     | 0x20 | 0b00100000
+| gpio_out_a17     | 0x40 | 0b01000000
+| gpio_out_a18     | 0x80 | 0b10000000
+| **LO Bank**      |      |
+| gpio_out_lobank  | 0xF0 | 0b11110000 (all lobank addr bits)
+| 
+| **GP Input**     |      |
+| gpio_in_prn_err  | 0x01 | 
+| gpio_in_prn_stat | 0x02 | 
+| gpio_in_prn_papr | 0x04 | 
+| gpio_in_prn_bsy  | 0x08 | 
+| gpio_in_prn_ack  | 0x10 | 
+| gpio_in_user1    | 0x20 |  
+| gpio_in_sd_det   | 0x40 | 
+| gpio_in_sd_miso  | 0x80 | 

@@ -759,6 +759,18 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     }
   }
 
+  // Set all values in the color table to color.
+  void vdp_setPatternColor(uint8_t color) {
+    vdp_setWriteAddress(_vdpColorTableAddr);
+    for (uint16_t i = 0; i < 0x1800; i++) {
+      IO_VDPDATA = color;
+      nop();
+      nop();
+      nop();
+      nop();
+    }
+  }
+
   void vdp_loadColorTable(uint8_t *colorTable, uint16_t len) {
 
     // datasheet 2-20 : screen is split into 3 and the color table therefore is repeated 3 times

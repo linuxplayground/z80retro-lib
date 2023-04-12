@@ -270,7 +270,7 @@ volatile uint8_t _randomSeed = 0;
   volatile uint8_t _rxBufferReadPos  = 0;
   volatile uint8_t _rxBufferWritePos = 0;
   #warning
-  #warning HCCA Interupt: Enabled
+  #warning HCCA Interupt: Enabled - XXX THESE FUNCTIONS ARE ALL STUBBED OUT ON THE Z80-Retro.
   #warning
 #else
   #warning
@@ -879,6 +879,8 @@ inline uint8_t ayRead(uint8_t reg);
   void vt_normalVideo();
 
   void vt_reverseVideo();
+
+  bool isCloudCPM();
 
 #endif 
 

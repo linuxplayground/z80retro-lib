@@ -231,6 +231,9 @@ void RightShift(uint8_t *arr, uint16_t len, uint8_t n) {
     printf("%cp", 27);
   }
 
+  bool isCloudCPM() {
+    return false;
+  }
 #endif
 
 
@@ -346,47 +349,47 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
   // **************************************************************************
 
   bool hcca_ping() {
-    #warning *** HCCA Functions return potentially non useful results on the Z80_RETRO
+    
     return false;
   }
 
   bool hcca_isRxBufferAvailable() {
-    #warning *** HCCA Functions return potentially non useful results on the Z80_RETRO
+    
     return false;
   }
 
   uint8_t hcca_getSizeOfDataInBuffer() {
-    #warning *** HCCA Functions return potentially non useful results on the Z80_RETRO
+    
     return 0;
   }
 
   uint8_t hcca_readByte() {
-    #warning *** HCCA Functions return potentially non useful results on the Z80_RETRO
+    
     return 0;
   }
 
   uint16_t hcca_readUInt16() {
-    #warning *** HCCA Functions return potentially non useful results on the Z80_RETRO
+    
     return 0;
   }
 
   int16_t hcca_readInt16() {
-    #warning *** HCCA Functions return potentially non useful results on the Z80_RETRO
+    
     return 0;
   }
 
   uint32_t hcca_readUInt32() {
-    #warning *** HCCA Functions return potentially non useful results on the Z80_RETRO
+    
     return 0;
   }
 
   int32_t hcca_readInt32() {
-    #warning *** HCCA Functions return potentially non useful results on the Z80_RETRO
+    
     return 0;
   }
 
   void hcca_readBytes(uint16_t offset, uint16_t bufferLen, uint8_t *buffer) {
-    #warning *** HCCA Functions return potentially non useful results on the Z80_RETRO
+    
     (void)offset;
     (void)bufferLen;
     (void)buffer;
@@ -399,32 +402,32 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
   // **************************************************************************
 
   void hcca_writeByte(uint8_t c) {
-    #warning *** HCCA Functions return potentially non useful results on the Z80_RETRO
+    
     (void)c;
   }
 
   void hcca_writeUInt32(uint32_t val) {
-    #warning *** HCCA Functions return potentially non useful results on the Z80_RETRO
+    
     (void)val;
   }
 
   void hcca_writeInt32(int32_t val) {
-    #warning *** HCCA Functions return potentially non useful results on the Z80_RETRO
+    
     (void)val;
   }
 
   void hcca_writeUInt16(uint16_t val) {
-    #warning *** HCCA Functions return potentially non useful results on the Z80_RETRO
+    
     (void)val;
   }
 
   void hcca_writeInt16(int16_t val) {
-    #warning *** HCCA Functions return potentially non useful results on the Z80_RETRO
+    
     (void)val;
   }
 
   void hcca_writeString(uint8_t *str) {
-    #warning *** HCCA Functions return potentially non useful results on the Z80_RETRO
+    
     (void)str;
   }
 

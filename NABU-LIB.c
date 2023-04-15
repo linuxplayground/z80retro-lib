@@ -453,14 +453,14 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     IO_VDPLATCH = 0x80 | registerIndex;
   }
 
-  void vdp_setWriteAddress(uint16_t address) {
+  void vdp_setWriteAddress(uint16_t address) __z88dk_fastcall {
 
     IO_VDPLATCH = address & 0xff;
 
     IO_VDPLATCH = 0x40 | ((address >> 8) & 0x3f);
   }
 
-  void vdp_setReadAddress(uint16_t address) {
+  void vdp_setReadAddress(uint16_t address) __z88dk_fastcall {
 
     IO_VDPLATCH = address & 0xff;
 
@@ -598,7 +598,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
       vdp_put(0);
   }
 
-  void vdp_initMSXMode(uint8_t bgColor) {
+  void vdp_initMSXMode(uint8_t bgColor) __z88dk_fastcall {
 
     // https://konamiman.github.io/MSX2-Technical-Handbook/md/Appendix5.html#screen-1--graphic-1
 
@@ -650,7 +650,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     } while (start != end);
   }
 
-  void vdp_fillScreen(uint8_t c) {
+  void vdp_fillScreen(uint8_t c) __z88dk_fastcall {
 
     vdp_setWriteAddress(_vdpPatternNameTableAddr);
     uint8_t *start = _vdp_textBuffer;
@@ -681,7 +681,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     } while (start != end);
   }
 
-  void vdp_loadASCIIFont(uint8_t *font) {
+  void vdp_loadASCIIFont(uint8_t *font) __z88dk_fastcall {
 
     vdp_setWriteAddress(_vdpPatternGeneratorTableAddr + 0x100);
 
@@ -695,7 +695,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     } while (start != end);
   }
 
-  void vdp_loadASCIIFontWithInverse(uint8_t *font) {
+  void vdp_loadASCIIFontWithInverse(uint8_t *font) __z88dk_fastcall {
 
     vdp_setWriteAddress(_vdpPatternGeneratorTableAddr + 0x100);
 
@@ -763,7 +763,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
   }
 
   // Set all values in the color table to color.
-  void vdp_setPatternColor(uint8_t color) {
+  void vdp_setPatternColor(uint8_t color) __z88dk_fastcall {
     vdp_setWriteAddress(_vdpColorTableAddr);
     for (uint16_t i = 0; i < 0x1800; i++) {
       IO_VDPDATA = color;
@@ -898,7 +898,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     }
   }
 
-  void vdp_disableSprite(uint8_t id) {
+  void vdp_disableSprite(uint8_t id) __z88dk_fastcall {
 
     uint16_t addr = _vdpSpriteAttributeTableAddr + 4 * id;
 
@@ -994,7 +994,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     *xpos = IO_VDPDATA;
   }
 
-  void vdp_print(uint8_t *text) {
+  void vdp_print(uint8_t *text) __z88dk_fastcall {
 
     uint8_t *start = text;
 
@@ -1047,7 +1047,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     }
   }
 
-  void vdp_setBackDropColor(uint8_t color) {
+  void vdp_setBackDropColor(uint8_t color) __z88dk_fastcall {
 
     vdp_setRegister(7, color);
   }
@@ -1067,7 +1067,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     vdp_cursor.y = row;
   }
 
-  void vdp_setCursor(uint8_t direction) {
+  void vdp_setCursor(uint8_t direction) __z88dk_fastcall {
 
     switch (direction) {
       case VDP_CURSOR_UP:
@@ -1090,7 +1090,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     vdp_setRegister(7, (fg << 4) + bg);
   }
 
-  void vdp_write(uint8_t chr) {
+  void vdp_write(uint8_t chr) __z88dk_fastcall {
 
     uint16_t name_offset = vdp_cursor.y * _vdpCursorMaxXFull + vdp_cursor.x;
 
@@ -1229,7 +1229,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     } while (v != e);
   }
 
-  void vdp_writeUInt8ToBinary(uint8_t v) {
+  void vdp_writeUInt8ToBinary(uint8_t v) __z88dk_fastcall {
 
     uint8_t str[9];
 
@@ -1244,7 +1244,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     vdp_print(str);
   }
 
-  void vdp_writeUInt16ToBinary(uint16_t v) {
+  void vdp_writeUInt16ToBinary(uint16_t v) __z88dk_fastcall {
 
     uint8_t str[17];
 
@@ -1259,7 +1259,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     vdp_print(str);
   }
 
-  void vdp_writeUInt32ToBinary(uint32_t v) {
+  void vdp_writeUInt32ToBinary(uint32_t v) __z88dk_fastcall {
 
     uint8_t str[33];
 
@@ -1278,14 +1278,14 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
   //Limits all ram out operations to at least 8uS.  We could be more efficient on the VDP Blank,
   //but if the code overshoots the vsync timings, we would end up in trouble.  This approach while a bit
   //slower, avoids that risk altogether.
-  void vdp_put(uint8_t c) {
+  void vdp_put(uint8_t c) __z88dk_fastcall {
     IO_VDPDATA = c;
     __asm
-      push    bc                      ; 11  | 11
+      // push    bc                      ; 11  | 11
       ld      b, 2                    ; 2 iteration
     TmsRamOutDelay:
       djnz    TmsRamOutDelay          ; 8   | 7  plus (13 | 9) * (iterations-1)
-      pop     bc                      ; 10  | 9
+      // pop     bc                      ; 10  | 9
     __endasm;
   }
 #endif

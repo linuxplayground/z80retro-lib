@@ -965,36 +965,36 @@ inline uint8_t ayRead(uint8_t reg);
   // **************************************************************************
   // Write a byte to the HCCA
   // **************************************************************************
-  void hcca_writeByte(uint8_t c);
+  void hcca_writeByte(uint8_t c) __z88dk_fastcall;
 
   // **************************************************************************
   // Write the unsigned 32-bit integer to the HCCA.
   // This is LSB First
   // **************************************************************************
-  void hcca_writeUInt32(uint32_t val);
+  void hcca_writeUInt32(uint32_t val) __z88dk_fastcall;
 
   // **************************************************************************
   // Write the signed 32-bit integer to the HCCA.
   // This is LSB First
   // **************************************************************************
-  void hcca_writeInt32(int32_t val);
+  void hcca_writeInt32(int32_t val) __z88dk_fastcall;
 
   // **************************************************************************
   // Write the unsigned 16-bit integer to the HCCA.
   // This is LSB First
   // **************************************************************************
-  void hcca_writeUInt16(uint16_t val);
+  void hcca_writeUInt16(uint16_t val) __z88dk_fastcall;
 
   // **************************************************************************
   // Write the signed 16-bit integer to the HCCA.
   // This is LSB First
   // **************************************************************************
-  void hcca_writeInt16(int16_t val);
+  void hcca_writeInt16(int16_t val) __z88dk_fastcall;
 
   // **************************************************************************
   // Write null terminated string to the HCCA
   // **************************************************************************
-  void hcca_writeString(uint8_t* str);
+  void hcca_writeString(uint8_t* str) __z88dk_fastcall;
 
   // **************************************************************************
   // Write to the HCCA
@@ -1021,8 +1021,8 @@ inline uint8_t ayRead(uint8_t reg);
   // For directly writing and reading from IO_VDPDATA and writing registers
   // **************************************************************************
   inline void vdp_setRegister(uint8_t registerIndex, uint8_t value);
-  inline void vdp_setWriteAddress(uint16_t address);
-  inline void vdp_setReadAddress(uint16_t address);
+  inline void vdp_setWriteAddress(uint16_t address) __z88dk_fastcall;
+  inline void vdp_setReadAddress(uint16_t address) __z88dk_fastcall;
 
   // **************************************************************************
   // at a constant and acceptable speed. You can call the vdp_waitVDPReadyInt() to synchronize
@@ -1178,7 +1178,7 @@ inline uint8_t ayRead(uint8_t reg);
   // Initializes the VDP in MSX Basic compatible mode for loading .SC2 files
   //
   // **************************************************************************
-  void vdp_initMSXMode(uint8_t bgColor);
+  void vdp_initMSXMode(uint8_t bgColor) __z88dk_fastcall;
 
   // **************************************************************************
   // 
@@ -1209,7 +1209,7 @@ inline uint8_t ayRead(uint8_t reg);
   // **************************************************************************
   // Fills the screen with the character
   // **************************************************************************
-  void vdp_fillScreen(uint8_t c);
+  void vdp_fillScreen(uint8_t c) __z88dk_fastcall;
 
   // **************************************************************************
   // Clear the rows with 0x20 between topRow and bottomRow
@@ -1239,7 +1239,7 @@ inline uint8_t ayRead(uint8_t reg);
   // *Note: You must call this function if you're using text mode because it requires 
   //        a font to be set
   // **************************************************************************
-  void vdp_loadASCIIFont(uint8_t* font);
+  void vdp_loadASCIIFont(uint8_t* font) __z88dk_fastcall;
 
 
   // **************************************************************************
@@ -1249,7 +1249,7 @@ inline uint8_t ayRead(uint8_t reg);
   // With the default 768 byte ASCII font, you just need to add 96 to the
   // character. For example, vdp_write(96 + "H") will print an inverted capital H
   // **************************************************************************
-  void vdp_loadASCIIFontWithInverse(uint8_t* font);
+  void vdp_loadASCIIFontWithInverse(uint8_t* font) __z88dk_fastcall;
 
   // **************************************************************************
   // Initialize vdp with the pattern table with an array of data. 
@@ -1265,7 +1265,7 @@ inline uint8_t ayRead(uint8_t reg);
   // Set the entireColorTable to be the same value.
   // 
   // **************************************************************************
-  void vdp_setPatternColor(uint8_t color);
+  void vdp_setPatternColor(uint8_t color) __z88dk_fastcall;
 
   // **************************************************************************
   // Initialize the vdp with the color table. 
@@ -1329,7 +1329,7 @@ inline uint8_t ayRead(uint8_t reg);
   //
   // - text Text to print
   // **************************************************************************
-  void vdp_print(uint8_t* text);
+  void vdp_print(uint8_t* text) __z88dk_fastcall;
 
   // **************************************************************************
   // Print null terminated string at the current cursor position and change the
@@ -1348,7 +1348,7 @@ inline uint8_t ayRead(uint8_t reg);
   // **************************************************************************
   // Set backdrop border color
   // **************************************************************************
-  inline void vdp_setBackDropColor(uint8_t);
+  inline void vdp_setBackDropColor(uint8_t) __z88dk_fastcall;
 
   // **************************************************************************
   //  Position the cursor at the specified position
@@ -1363,7 +1363,7 @@ inline uint8_t ayRead(uint8_t reg);
   //
   // - direction {VDP_CURSOR_UP|VDP_CURSOR_DOWN|VDP_CURSOR_LEFT|VDP_CURSOR_RIGHT}
   // </summary
-  void vdp_setCursor(uint8_t direction);
+  void vdp_setCursor(uint8_t direction) __z88dk_fastcall;
 
   // **************************************************************************
   //  set foreground and background color of the characters printed after this function has been called.
@@ -1380,12 +1380,12 @@ inline uint8_t ayRead(uint8_t reg);
   //
   // - chr Pattern at the respective location of the  pattern memory. Graphic Mode 1 and Text Mode: Ascii code of character
   // **************************************************************************
-  void vdp_write(uint8_t chr);
+  void vdp_write(uint8_t chr) __z88dk_fastcall;
 
   // **************************************************************************
   //  Disable a sprite
   // **************************************************************************
-  void vdp_disableSprite(uint8_t id);
+  void vdp_disableSprite(uint8_t id) __z88dk_fastcall;
 
   // **************************************************************************
   //  Write a sprite into the sprite pattern table
@@ -1517,20 +1517,20 @@ inline uint8_t ayRead(uint8_t reg);
   // **************************************************************************
   // Display the binary value of the variable
   // **************************************************************************
-  void vdp_writeUInt8ToBinary(uint8_t v);
+  void vdp_writeUInt8ToBinary(uint8_t v) __z88dk_fastcall;
 
   // **************************************************************************
   // Display the binary value of the variable
   // **************************************************************************
-  void vdp_writeUInt16ToBinary(uint16_t v);
+  void vdp_writeUInt16ToBinary(uint16_t v) __z88dk_fastcall;
 
   // **************************************************************************
   // Display the binary value of the variable
   // **************************************************************************
-  void vdp_writeUInt32ToBinary(uint32_t v);
+  void vdp_writeUInt32ToBinary(uint32_t v) __z88dk_fastcall;
 
   //Z80 Retro function to slow things down a bit
-  void vdp_put(uint8_t c);
+  void vdp_put(uint8_t c) __z88dk_fastcall;
 
 #endif
 

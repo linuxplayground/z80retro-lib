@@ -1142,29 +1142,34 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
   void vdp_refreshViewPort() {
   
-    vdp_setWriteAddress(_vdpPatternNameTableAddr);
+    // vdp_setWriteAddress(_vdpPatternNameTableAddr);
 
     __asm
       ld hl, __vdp_textBuffer;
-      ld de, (__vdpTextBufferSize); 
+      ld de, (__vdpPatternNameTableAddr);
+      ld bc, (__vdpTextBufferSize);
+      ld	a,e;
+      out	(0x81),a;
+      ld	a,d;
+      or	0x40;
+      out	(0x81),a;
 
-      vdp_refreshViewPortLoop3:
+      ld	d,b
+      ld	e,c;
 
-        ld a, (hl);
-        out (0x80), a;
-        
-        push hl;
-        pop hl;
-        push hl;
-        pop hl;
+      ld	c,0x80;
+      ld	b,e;
+      inc	e;
+      dec	e;
+      jr	z,vdp_write_loop;
+      inc	d;
 
-        inc hl;
-        dec de;
-
-        ld A, D;                 
-        or E;                   
-        jp nz, vdp_refreshViewPortLoop3;
-
+    vdp_write_loop:
+	    outi;
+	    jp	nz,vdp_write_loop;
+	    dec	d;
+	    jp	nz,vdp_write_loop;
+      in  a,(0x81);
       __endasm;
   }
 

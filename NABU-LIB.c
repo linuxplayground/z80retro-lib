@@ -470,7 +470,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
   void vdp_waitVDPReadyInt() {
     while ((IO_JOY0 & 0x02) != 0)
       ;
-    uint8_t v = IO_VDPLATCH;
+    vdpStatusRegVal = IO_VDPLATCH;
   }
   
   void waitVdpISR() {

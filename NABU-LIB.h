@@ -1260,12 +1260,7 @@ inline uint8_t ayRead(uint8_t reg);
   //        default pattern that is displayed on a clear screen (id 0)
   // **************************************************************************
   void vdp_loadPatternTable(uint8_t *patternTable, uint16_t len);
-  
-  // **************************************************************************
-  // Set the entireColorTable to be the same value.
-  // 
-  // **************************************************************************
-  void vdp_setPatternColor(uint8_t color) __z88dk_fastcall;
+
 
   // **************************************************************************
   // Initialize the vdp with the color table. 

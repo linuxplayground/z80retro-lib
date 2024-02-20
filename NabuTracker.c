@@ -17,14 +17,14 @@ void nt_init(uint16_t *song) {
   ayWrite(10, 0);
 }
 
-void nt_stopSounds() {
+void nt_stopSounds(void) {
 
   ayWrite(8,  0);
   ayWrite(9,  0);
   ayWrite(10, 0);
 }
 
-void nt_handleNote() {
+void nt_handleNote(void) {
 
   // time (0)
   while (_song[_itemCntr] == _beatCntr) {

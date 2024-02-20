@@ -50,12 +50,12 @@ void nt_init(uint16_t *song);
 // ***************************************************************************
 // Called on each iteration of your program that advances the music by 1/16
 // ***************************************************************************
-void nt_handleNote();
+void nt_handleNote(void);
 
 // ***************************************************************************
 // Stop all sounds becuase you're done playing music
 // ***************************************************************************
-void nt_stopSounds();
+void nt_stopSounds(void);
 
 #include "NabuTracker.c"
 

@@ -1,7 +1,7 @@
 void nt_init(uint16_t *song) {
 
   _song = song;
-  
+
   _itemCntr = 0;
   _beatCntr = 0;
 
@@ -28,7 +28,7 @@ void nt_handleNote(void) {
 
   // time (0)
   while (_song[_itemCntr] == _beatCntr) {
-  
+
     _itemCntr++;
 
     // command (1)
@@ -68,25 +68,25 @@ void nt_handleNote(void) {
         _itemCntr += 4;
 
         break;
-      }        
+      }
       case NT_SND_CHNG:
 
           ayWrite(8,  0);
-        
-          if (_song[_itemCntr + 1]) 
+
+          if (_song[_itemCntr + 1])
             ayWrite(7, 0b01111000); // note
           else
             ayWrite(7, 0b01110001); // noise
 
         _itemCntr += 2;
-        
+
         break;
-      
+
       case NT_LOOP:
 
         _itemCntr = 0;
-        
-        _beatCntr = 0;        
+
+        _beatCntr = 0;
     }
   }
 

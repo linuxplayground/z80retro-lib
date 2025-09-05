@@ -259,6 +259,9 @@
 // 
 // **************************************************************************
 
+__sfr __at 0x40 IO_AYDATA;
+__sfr __at 0x41 IO_AYLATCH;
+
 __sfr __at 0x80 IO_VDPDATA;
 __sfr __at 0x81 IO_VDPLATCH;
 

@@ -1,6 +1,7 @@
+// vim: ts=4 sw=4:
 // ****************************************************************************************
 // NABU-LIB C Library
-// DJ Sures (c) 2023
+// DJ Sures (c) 2025
 // https://nabu.ca
 // https://github.com/DJSures/NABU-LIB
 // 
@@ -26,11 +27,27 @@ void initNABULib(void) {
 
   srand(_randomSeed);
 
+  initNABULIBAudio();
 }
 
-void initNABULIBAudio(void) {
-  ;
+void initNABULIBAudio() {
+
+  // Noise envelope
+  ayWrite(6, 0b00000000);
+
+  // Turn off all channels
+  ayWrite(8, 0b00000000);
+  ayWrite(9, 0b00000000);
+  ayWrite(10, 0b00000000);
+
+  // Enable only the Tone generators on A B C
+  ayWrite(7, 0b01111000);
+
+  ayWrite(11, 0);
+  ayWrite(12, 0);
+  ayWrite(13, 0);
 }
+
 
 void nop(void) {
   __asm
@@ -53,7 +70,7 @@ void NABU_EnableInterrupts(void) {
 }
 
 void RightShift(uint8_t *arr, uint16_t len, uint8_t n) {
-        
+
   uint8_t *toPtr = arr + (len - 1);
   uint8_t *fromPtr = toPtr - n;
   uint8_t *endPtr = arr - 1;
@@ -97,18 +114,17 @@ void RightShift(uint8_t *arr, uint16_t len, uint8_t n) {
   // VT51 for CPM
   // ------------------
   // **************************************************************************
-
-  void vt_clearToEndOfScreen(void) {
+  void vt_clearToEndOfScreen() {
 
     printf("%cJ", 27);
   }
 
-  void vt_clearToEndOfLine(void) {
+  void vt_clearToEndOfLine() {
 
     printf("%cK", 27);
   }
 
-  void vt_clearScreen(void) {
+  void vt_clearScreen() {
 
     if (_EMULATION_MODE == 0)
       putchar(26);
@@ -116,17 +132,17 @@ void RightShift(uint8_t *arr, uint16_t len, uint8_t n) {
       printf("%cE", 27);
   }
 
-  void vt_clearLine(void) {
+  void vt_clearLine() {
 
     printf("%cl", 27);
   }
 
-  void vt_clearToStartOfLine(void) {
+  void vt_clearToStartOfLine() {
 
     printf("%co", 27);
   }
 
-  void vt_clearToStartOfScreen(void) {
+  void vt_clearToStartOfScreen() {
 
     printf("%cd", 27);
   }
@@ -134,10 +150,13 @@ void RightShift(uint8_t *arr, uint16_t len, uint8_t n) {
   void vt_moveCursorDown(uint8_t count) {
 
     for (uint8_t i = 0; i < count; i++)
-      printf("%cB", 27);
+      if (_EMULATION_MODE == 0)
+        putchar(0x0a);
+      else
+        printf("%cB", 27);
   }
 
-  void vt_cursorHome(void) {
+  void vt_cursorHome() {
 
     printf("%cH", 27);
   }
@@ -145,24 +164,36 @@ void RightShift(uint8_t *arr, uint16_t len, uint8_t n) {
   void vt_moveCursorLeft(uint8_t count) {
 
     for (uint8_t i = 0; i < count; i++)
-      printf("%cD", 27);
+      if (_EMULATION_MODE == 0)
+        putchar(8);
+      else;
+        printf("%cD", 27);
   }
 
   void vt_moveCursorRight(uint8_t count) {
 
     for (uint8_t i = 0; i < count; i++)
-      printf("%cC", 27);
+      if (_EMULATION_MODE == 0)
+        putchar(12);
+      else
+        printf("%cC", 27);
   }
 
   void vt_moveCursorUp(uint8_t count) {
 
     for (uint8_t i = 0; i < count; i++)
-      printf("%cA", 27);
+      if (_EMULATION_MODE == 0)
+        putchar(11);
+      else
+        printf("%cA", 27);
   }
 
-  void vt_deleteLine(void) {
+  void vt_deleteLine() {
 
-    printf("%cM", 27);
+    if (_EMULATION_MODE)
+      printf("%cR", 27);
+    else
+      printf("%cM", 27);
   }
 
   void vt_setCursor(uint8_t x, uint8_t y) {
@@ -177,21 +208,20 @@ void RightShift(uint8_t *arr, uint16_t len, uint8_t n) {
     putchar(32 + x);
   }
 
-  void vt_foregroundColor(uint8_t color) {
+  void vt_insertLine() {
 
-    putchar(27);
-    putchar('b');
-    putchar(color);
+    if (_EMULATION_MODE == 0)
+      printf("%cE", 27);
+    else
+      printf("%cL", 27);
   }
 
-  void vt_insertLine(void) {
+  void vt_restoreCursorPosition() {
 
-    printf("%cL", 27);
-  }
-
-  void vt_restoreCursorPosition(void) {
-
-    printf("%ck", 27);
+    if (_EMULATION_MODE == 0)
+      printf("%ck", 27);
+    else
+      printf("%ck", 27);
   }
 
   void vt_backgroundColor(uint8_t color) {
@@ -201,39 +231,42 @@ void RightShift(uint8_t *arr, uint16_t len, uint8_t n) {
     putchar(color);
   }
 
-  void vt_saveCursorPosition(void) {
+  void vt_saveCursorPosition() {
 
     printf("%cj", 27);
   }
 
-  void vt_cursorUpAndInsert(void) {
+  void vt_cursorUpAndInsert() {
 
     printf("%cI", 27);
   }
 
-  void vt_wrapOff(void) {
+  void vt_wrapOff() {
 
     printf("%cw", 27);
   }
 
-  void vt_wrapOn(void) {
+  void vt_wrapOn() {
 
     printf("%cv", 27);
   }
 
-  void vt_normalVideo(void) {
+  void vt_normalVideo() {
 
     printf("%cq", 27);
   }
 
-  void vt_reverseVideo(void) {
+  void vt_reverseVideo() {
 
     printf("%cp", 27);
   }
 
-  bool isCloudCPM(void) {
+  bool isCloudCPM() {
+
     return false;
   }
+
+
 #endif
 
 
@@ -245,20 +278,62 @@ void RightShift(uint8_t *arr, uint16_t len, uint8_t n) {
 // **************************************************************************
 
 void ayWrite(uint8_t reg, uint8_t val) {
-  (void)reg;
-  (void)val;
+
+  IO_AYLATCH = reg;
+
+  IO_AYDATA = val;
 }
 
 uint8_t ayRead(uint8_t reg) {
-  (void)reg;
-  return 0;
+
+  IO_AYLATCH = reg;
+
+  return IO_AYDATA;
 }
 
 void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
-  (void)channel;
-  (void)note;
-  (void)delayLength;
+
+  // Set the envolope length
+  ayWrite(11, delayLength >> 8);
+  ayWrite(12, delayLength & 0xff);
+
+  switch (channel) {
+    case 0:
+
+      ayWrite(8, 0b00010000);
+      ayWrite(9, 0b00000000);
+      ayWrite(10, 0b00000000);
+
+      ayWrite(0x00, _NOTES_FINE[note]);
+      ayWrite(0x01, _NOTES_COURSE[note]);
+
+      ayWrite(13, 0b00000000);
+      break;
+    case 1:
+
+      ayWrite(8, 0b00000000);
+      ayWrite(9, 0b00010000);
+      ayWrite(10, 0b00000000);
+
+      ayWrite(0x02, _NOTES_FINE[note]);
+      ayWrite(0x03, _NOTES_COURSE[note]);
+
+      ayWrite(13, 0b00000000);
+      break;
+    case 2:
+
+      ayWrite(8, 0b00000000);
+      ayWrite(9, 0b00000000);
+      ayWrite(10, 0b00010000);
+
+      ayWrite(0x04, _NOTES_FINE[note]);
+      ayWrite(0x05, _NOTES_COURSE[note]);
+
+      ayWrite(13, 0b00000000);
+      break;
+  }
 }
+
 
 // **************************************************************************
 // Keyboard
@@ -275,19 +350,19 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
     uint8_t isKeyPressed(void) __naked {
       // this is dubious, at best
-		__asm
-      in    a,(0x32)	  ; read sio control status byte
-      and   1			      ; check the rcvr ready bit
-			ld		l,a
-			ret
-		__endasm;
+        __asm
+          in    a,(0x32)      ; read sio control status byte
+          and   1             ; check the rcvr ready bit
+          ld    l,a
+          ret
+        __endasm;
     }
 
     uint8_t getChar(void) __naked {
 
       __asm
         in    a,(0x30)  ; read sio control status byte
-        ld		l,a
+        ld      l,a
         ret
       __endasm;
     }
@@ -479,19 +554,24 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
       ;
     vdpStatusRegVal = IO_VDPLATCH;
   }
-  
+
   void waitVdpISR(void) {
     ;
   }
+
   void vdp_enableVDPReadyInt(void) {
+    _vdpInterruptEnabled = true;
     vdp_setRegister(1, _vdpReg1Val | 0b00100000 );  
   }
+
   void vdp_disableVDPReadyInt(void) {
     vdp_setRegister(1, _vdpReg1Val);
   }
+
   void vdp_addISR(void (*isr)(void)) {
     (void)isr;
   }
+
   void vdp_removeISR(void) {
     ;
   }
@@ -565,7 +645,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
           vdp_setRegister(4, 0x03);
         else
           vdp_setRegister(4, 0x00);
-        
+
         _vdpPatternGeneratorTableAddr = 0x00;
 
         fgColor = 0;
@@ -607,13 +687,6 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
         vdp_setRegister(6, 0x07);
         _vdpSpriteGeneratorTableAddr = 0x3800;
 
-
-        // https://konamiman.github.io/MSX2-Technical-Handbook/md/Appendix5.html#screen-1--graphic-1
-        // vdp_setRegister(2, 0x06);
-        // vdp_setRegister(3, 0xff);
-        // vdp_setRegister(4, 0x03);
-        // vdp_setRegister(5, 0x36); 
-        // vdp_setRegister(6, 0x07);
 
         _vdpCursorMaxX = 39;
         _vdpCursorMaxXFull = 40;
@@ -683,15 +756,14 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     vdp_init(VDP_MODE_TEXT, fgColor, bgColor , false, false, autoScroll, false);
   }
 
+  void vdp_initG1Mode(uint8_t bgColor, bool bigSprites, bool scaleSprites, bool autoScroll, bool splitThirds) {
+
+    vdp_init(VDP_MODE_G1, 0, bgColor, bigSprites, scaleSprites, autoScroll, splitThirds);
+  }
+
   void vdp_initG2Mode(uint8_t bgColor, bool bigSprites, bool scaleSprites, bool autoScroll, bool splitThirds) {
 
     vdp_init(VDP_MODE_G2, 0, bgColor, bigSprites, scaleSprites, autoScroll, splitThirds);
-  }
-
-  void vdp_initG1Mode(uint8_t bgColor, bool bigSprites, bool scaleSprites, bool autoScroll, bool splitThirds) {
-
-    (void)splitThirds;
-    vdp_init(VDP_MODE_G1, 0, bgColor, bigSprites, scaleSprites, autoScroll, false);
   }
 
   void vdp_initMultiColorMode(void) {
@@ -700,7 +772,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
   }
 
   void vdp_clearScreen(void) {
-      
+
     vdp_setWriteAddress(_vdpPatternNameTableAddr);
 
     uint8_t *start = _vdp_textBuffer;
@@ -735,7 +807,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
   }
 
   void vdp_clearRows(uint8_t topRow, uint8_t bottomRow) {
-    
+
     uint16_t name_offset = topRow * _vdpCursorMaxXFull;
 
     vdp_setWriteAddress(_vdpPatternNameTableAddr + name_offset);
@@ -744,7 +816,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     uint8_t *end   = _vdp_textBuffer + (bottomRow * _vdpCursorMaxXFull);
 
     do {
-      
+
       vdp_put(0x20);
       *start = 0x20;
 
@@ -793,7 +865,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
 
     vdp_setWriteAddress(_vdpPatternNameTableAddr + name_offset);
     _vdp_textBuffer[name_offset] = patternId;
-    
+
     // IO_VDPDATA = patternId;
     vdp_put(patternId);
   }
@@ -833,12 +905,49 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     }
   }
 
+  void vdp_loadColorToId(uint8_t patternId,  uint8_t *color) {
+
+    // datasheet 2-20 : screen is split into 3 and the color table therefore is repeated 3 times
+    uint8_t *start = color;
+    uint8_t *end = start + 8;
+
+    vdp_setWriteAddress(_vdpColorTableAddr + ((uint16_t)patternId * 8));
+    do {
+
+      IO_VDPDATA = *start;
+
+      start++;
+    } while (start != end);
+
+    if (_vdpSplitThirds) {
+
+      vdp_setWriteAddress(_vdpColorTableAddr + 2048 + ((uint16_t)patternId * 8));
+      start = color;
+      do {
+
+        IO_VDPDATA = *start;
+
+        start++;
+      } while (start != end);
+
+      vdp_setWriteAddress(_vdpColorTableAddr + 4096 + ((uint16_t)patternId * 8));
+      start = color;
+      do {
+
+        IO_VDPDATA = *start;
+
+        start++;
+      } while (start != end);
+    }
+  }
+
+
   void vdp_loadColorTable(uint8_t *colorTable, uint16_t len) {
 
     // datasheet 2-20 : screen is split into 3 and the color table therefore is repeated 3 times
     uint8_t *start = colorTable;
     uint8_t *end = colorTable + len;
-      
+
     vdp_setWriteAddress(_vdpColorTableAddr);
     do {
 
@@ -986,7 +1095,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
       vdp_setWriteAddress(_vdpSpriteGeneratorTableAddr);
 
       uint16_t end = numSprites * 8;
-      
+
       for (uint16_t i = 0; i < end; i++) 
         vdp_put(sprite[i]);
     }
@@ -997,9 +1106,9 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     uint16_t addr = _vdpSpriteAttributeTableAddr + 4 * id;
 
     vdp_setWriteAddress(addr);
-    
+
     vdp_put(y); // y
-    
+
     vdp_put(x); // x
 
     if (_vdpSpriteSizeSelected)
@@ -1064,6 +1173,52 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
       start++;
     }
   }
+
+  void vdp_printJustified(uint8_t *text, uint8_t leftMargin, uint8_t rightMargin) {
+
+    while (*text != 0x00) { 
+
+      if (*text == ' ') {
+
+        text++;  
+
+        uint8_t *startOfNextWord = text;
+
+        // Find the length of the next word
+        while (*startOfNextWord != ' '  && 
+              *startOfNextWord != '.'  && 
+              *startOfNextWord != ','  &&
+              *startOfNextWord != '!'  &&
+              *startOfNextWord != 0x00) 
+          startOfNextWord++;
+
+        // Calculate the length of the next word
+        uint8_t nextWordLength = startOfNextWord - text;
+
+        // Check if the next word exceeds the screen width
+        if (vdp_cursor.x + nextWordLength >= rightMargin) {
+
+          vdp_newLine();
+          vdp_cursor.x = leftMargin;
+
+        } else if (vdp_cursor.x != leftMargin) {
+
+          vdp_write(' ');
+        }
+      }
+
+      if (vdp_cursor.x >= rightMargin) {
+
+        vdp_newLine();
+        vdp_cursor.x = leftMargin;
+      }
+
+      vdp_write(*text);
+
+      text++; 
+    }
+  }
+
 
   void vdp_printColorized(uint8_t *text, uint8_t fgColor, uint8_t bgColor) {
 
@@ -1174,7 +1329,7 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
     uint16_t name_offset = y * _vdpCursorMaxXFull + x; 
 
     _vdp_textBuffer[name_offset] = c;
-      
+
     vdp_setWriteAddress(_vdpPatternNameTableAddr + name_offset);
 
     vdp_put(c);
@@ -1207,27 +1362,27 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
       ld hl, __vdp_textBuffer;
       ld de, (__vdpPatternNameTableAddr);
       ld bc, (__vdpTextBufferSize);
-      ld	a,e;
-      out	(0x81),a;
-      ld	a,d;
-      or	0x40;
-      out	(0x81),a;
+      ld    a,e;
+      out   (0x81),a;
+      ld    a,d;
+      or    0x40;
+      out   (0x81),a;
 
-      ld	d,b
-      ld	e,c;
+      ld    d,b
+      ld    e,c;
 
-      ld	c,0x80;
-      ld	b,e;
-      inc	e;
-      dec	e;
-      jr	z,vdp_write_loop;
-      inc	d;
+      ld    c,0x80;
+      ld    b,e;
+      inc   e;
+      dec   e;
+      jr    z,vdp_write_loop;
+      inc   d;
 
     vdp_write_loop:
-	    outi;
-	    jp	nz,vdp_write_loop;
-	    dec	d;
-	    jp	nz,vdp_write_loop;
+        outi;
+        jp  nz,vdp_write_loop;
+        dec d;
+        jp  nz,vdp_write_loop;
         in  a,(0x81);
     __endasm;
   }
@@ -1249,12 +1404,12 @@ void playNoteDelay(uint8_t channel, uint8_t note, uint16_t delayLength) {
       to++;
       from++;
     } while (from != end);
-    
+
     do {
 
       *to = 0x20;
       vdp_put(0x20);
-      
+
 
       to++;
     } while (to != end);

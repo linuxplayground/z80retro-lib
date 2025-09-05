@@ -452,6 +452,7 @@ volatile uint8_t _randomSeed = 0;
     VDP_MODE_G2 = 1,
     VDP_MODE_MULTICOLOR = 2,
     VDP_MODE_TEXT = 3,
+    VDP_MODE_G1 = 4,
   };
 
 
@@ -757,7 +758,12 @@ inline uint8_t ayRead(uint8_t reg);
 #ifndef DISABLE_KEYBOARD_INT
 
   // **************************************************************************
-  // Returns false if no key has been pressed, otherwise it returns the key value
+  // Returns false if no key has been pressed, otherwise it returns they key value
+  // **************************************************************************
+  uint8_t getKey();
+
+  // **************************************************************************
+  // Returns false if no key has been pressed, otherwise it returns true
   // **************************************************************************
   uint8_t isKeyPressed(void);
 
@@ -1167,6 +1173,7 @@ inline uint8_t ayRead(uint8_t reg);
   // 
   // **************************************************************************
   void vdp_initG2Mode(uint8_t bgColor, bool bigSprites, bool scaleSprites, bool autoScroll, bool splitThirds);
+  void vdp_initG1Mode(uint8_t bgColor, bool bigSprites, bool scaleSprites, bool autoScroll, bool splitThirds);
 
   // **************************************************************************
   // Initializes the VDP in 64x48 Multicolor Mode. Not really useful if more than 4k Video ram is available

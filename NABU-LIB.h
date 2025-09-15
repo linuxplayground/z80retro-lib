@@ -259,8 +259,8 @@
 // 
 // **************************************************************************
 
-__sfr __at 0x40 IO_AYDATA;
-__sfr __at 0x41 IO_AYLATCH;
+__sfr __at 0xB0 IO_AYLATCH;
+__sfr __at 0xB1 IO_AYDATA;
 
 __sfr __at 0x80 IO_VDPDATA;
 __sfr __at 0x81 IO_VDPLATCH;
@@ -272,15 +272,8 @@ volatile uint8_t _randomSeed = 0;
   volatile uint8_t _rxBuffer[256];
   volatile uint8_t _rxBufferReadPos  = 0;
   volatile uint8_t _rxBufferWritePos = 0;
-  
-  #warning HCCA Interupt: Enabled - XXX THESE FUNCTIONS ARE ALL STUBBED OUT ON THE Z80-Retro.
-  
-#else
-  
-  #warning HCCA Interrupt: Disabled
-  
-#endif
 
+#endif
 /*
 * DL: 2023-03-24
 * The assumption here is that games for the NABU will not disable the keyboard as they want Joystick Events.
@@ -305,16 +298,6 @@ volatile uint8_t _randomSeed = 0;
   volatile __sfr __at 0xA8 IO_JOY0;
   volatile __sfr __at 0xA9 IO_JOY1;
 
-
-
-  
-  #warning Keyboard Interupt Enabled. Use NABU-LIB keyboard functions only (no CPM STDIN)
-  
-
-#else //DISABLE_KEYBOARD_INT
-  
-  #warning Keyboard Interupt Disabled. If building for CPM, uses C STDIN stdio/conio functions for keyboard.
-  
 
 #endif //DISABLE_KEYBOARD_INT
 
@@ -475,16 +458,6 @@ volatile uint8_t _randomSeed = 0;
   // 5th sprite flag, set when more than 4 sprite per line 
   #define VDP_FLAG_S5 0b01000000
 
-
-  
-  #warning VDP has been enabled. If using CPM, you can mix STDOUT and NABU-LIB vdp functions.
-  
-
-#else
-
-  
-  #warning VDP has been disabled. If using CPM, you must use STDOUT functions (i.e. printf, fputs, etc). NABU-LIB vdp functions are not available
-  
 
 #endif
 
